@@ -8,6 +8,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/poziomy/main_menu.unity
+    guid: a555bed3501a83d4190c39f9d4f984f4
+  - enabled: 1
+    path: Assets/poziomy/menu_ustawien.unity
+    guid: 26ed8f75f57b59942a5f487d9ad83538
+  - enabled: 1
+    path: Assets/poziomy/poziom1.unity
+    guid: 1dffd83f6d7893142a5a2f9218f9aa51
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
