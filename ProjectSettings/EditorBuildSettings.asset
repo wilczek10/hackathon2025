@@ -15,11 +15,17 @@ EditorBuildSettings:
     path: Assets/poziomy/menu_ustawien.unity
     guid: 26ed8f75f57b59942a5f487d9ad83538
   - enabled: 1
+    path: "Assets/poziomy/wst\u0119p.unity"
+    guid: 06803d31ed2daa74e9be5dcb6e1bfb03
+  - enabled: 1
     path: Assets/poziomy/poziom1.unity
     guid: 1dffd83f6d7893142a5a2f9218f9aa51
   - enabled: 1
+    path: Assets/poziomy/poziom2 1.unity
+    guid: c68971dace990674fa5982b4bf64dc2d
+  - enabled: 1
     path: Assets/poziomy/poziom2.unity
-    guid: 82b4a51843cd9104ab76bd51a961c6a0
+    guid: 8f4954153c1707747a43ec86a24a9563
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

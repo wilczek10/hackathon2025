@@ -3456,7 +3456,7 @@ MonoBehaviour:
   grenadeClip: {fileID: 0}
   germanShootClip: {fileID: 7400000, guid: 0cbe4a11695f4d6468315d5c8ee7aa51, type: 2}
   germanGrenadeClip: {fileID: 7400000, guid: 54c0d956291e285458e0325a1fd0903d, type: 2}
-  tankAttackClip: {fileID: 7400000, guid: 69fc83c72337a7c48ba8da52afd33860, type: 2}
+  tankAttackClip: {fileID: 7400000, guid: feb0b62dd9b08624093332b697361a33, type: 2}
 --- !u!114 &1223068561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3477,7 +3477,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -6177358928472733399, guid: 9fc5ea9d0b86135449246020ba7bb677, type: 3}
+  m_Sprite: {fileID: -6728697922176064593, guid: f242d4283f5513f4e81c3d31459845f1, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3504,7 +3504,7 @@ RectTransform:
   m_GameObject: {fileID: 1223068559}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 6, y: 3, z: 3}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 815145380}
@@ -3528,7 +3528,7 @@ Animator:
   m_GameObject: {fileID: 1223068559}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: e8122306f73df37488bbffc99f301901, type: 2}
+  m_Controller: {fileID: 9100000, guid: ecff544aa0aa79644adfac2709547219, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
