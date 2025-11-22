@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public enum Team
@@ -136,6 +137,17 @@ public class TurnManager : MonoBehaviour
     [Header("Game State UI")]
     public Text infoText;
 
+    [Header("Animacje barykady / tła")]
+    public AnimationClip barykadaClip;       // przeciągasz plik animacji barykady
+    public GameObject barykadaObject;        // obiekt barykady (opcjonalnie, jeśli potrzebny)
+    public Animator barykadaAnimator;        // Animator barykady
+
+    public BackgroundScroll backgroundScroll;    // przeciągasz tło z Unity
+    public float waitTimeAfterScroll = 0.5f;     // pauza po animacji tła
+
+    [Header("Deck Visual")]
+    public GameObject[] deckBackCards; // np. 3–5 obrazków reprezentujących stos
+
     private Deck deck;
     private Hand hand;
 
@@ -146,6 +158,8 @@ public class TurnManager : MonoBehaviour
     private bool selectingTarget;
 
     private bool gameEnded = false;
+
+    // ============ START / INICJALIZACJA ============
 
     void Start()
     {
@@ -160,6 +174,8 @@ public class TurnManager : MonoBehaviour
         {
             DrawCardToHand();
         }
+
+        UpdateDeckVisual();
 
         state = TurnState.PlayerAction;
         UpdateInfoText("Tura gracza - wybierz kartę.");
@@ -204,7 +220,23 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    // ==== KARTY I UI ====
+    // ============ TALIA WIZUALNA ============
+
+    void UpdateDeckVisual()
+    {
+        if (deckBackCards == null || deckBackCards.Length == 0 || deck == null) return;
+
+        int cardsLeft = deck.drawPile.Count;
+
+        // prosty przykład: pokazujemy/ukrywamy kolejne rewersy
+        for (int i = 0; i < deckBackCards.Length; i++)
+        {
+            // możesz dobrać logikę – np. każdy reprezentuje ~3 karty
+            deckBackCards[i].SetActive(cardsLeft > i * 3);
+        }
+    }
+
+    // ============ KARTY I UI ============
 
     public void DrawCardToHand()
     {
@@ -213,6 +245,7 @@ public class TurnManager : MonoBehaviour
         Card drawn = deck.DrawCard();
         if (drawn == null)
         {
+            UpdateDeckVisual();
             return;
         }
 
@@ -222,11 +255,14 @@ public class TurnManager : MonoBehaviour
         if (!medicAlive && drawn.CardType == CardType.Bandage)
         {
             deck.Discard(drawn);
+            UpdateDeckVisual();
             return;
         }
 
         hand.AddCard(drawn);
         CreateCardUI(drawn);
+
+        UpdateDeckVisual();
     }
 
     void CreateCardUI(Card card)
@@ -393,8 +429,8 @@ public class TurnManager : MonoBehaviour
             // efekt wizualny nad Niemcem
             StartCoroutine(GrenadeEffectRoutine(gv, 1f));
 
-            // obrażenia (1–2)
-            int dmg = Random.Range(1, 3);
+            // obrażenia (1–2) Uwaga: Random.Range(int,int) jest < max, więc (1,2) da zawsze 1.
+            int dmg = Random.Range(1, 3); // jeśli chcesz 1 lub 2
             DealDamage(gv.unitData, dmg);
         }
 
@@ -445,7 +481,7 @@ public class TurnManager : MonoBehaviour
         foreach (var v in germanUnitViews) v.UpdateUI();
     }
 
-    // ==== DAMAGE / HEAL ====
+    // ============ DAMAGE / HEAL ============
 
     public void DealDamage(Unit target, int amount)
     {
@@ -482,7 +518,7 @@ public class TurnManager : MonoBehaviour
         RefreshAllUnitsUI();
     }
 
-    // ==== FLOW TUR ====
+    // ============ FLOW TUR ============
 
     public void EndPlayerAction()
     {
@@ -562,6 +598,35 @@ public class TurnManager : MonoBehaviour
         CheckEndConditions();
     }
 
+    // ============ PRZEJŚCIE SCENY / ANIMACJA TŁA ============
+
+    public void StartLevelTransition()
+    {
+        if (backgroundScroll != null)
+        {
+            // start przesuwania tła
+            backgroundScroll.StartScrolling();
+
+            // obliczenie czasu potrzebnego na przesunięcie (dystans / prędkość)
+            float loadTime = (backgroundScroll.distance / backgroundScroll.scrollSpeed) + waitTimeAfterScroll;
+
+            // po zakończeniu animacji → przejście do następnej sceny
+            Invoke(nameof(LoadNextScene), loadTime);
+        }
+        else
+        {
+            // jeśli nie ma backgroundScroll, od razu przechodzimy do sceny
+            Invoke(nameof(LoadNextScene), waitTimeAfterScroll);
+        }
+    }
+
+    void LoadNextScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
+    // ============ SPRAWDZANIE KOŃCA GRY ============
+
     void CheckEndConditions()
     {
         if (gameEnded) return;
@@ -573,6 +638,14 @@ public class TurnManager : MonoBehaviour
         {
             gameEnded = true;
             UpdateInfoText("WYGRANA! Wszyscy Niemcy pokonani.");
+
+            // animacja upadku barykady
+            if (barykadaAnimator != null && barykadaClip != null)
+                barykadaAnimator.Play(barykadaClip.name);
+
+            // przejście sceny po 1.5 sek
+            Invoke(nameof(StartLevelTransition), 1.5f);
+
             return;
         }
 
@@ -595,6 +668,8 @@ public class TurnManager : MonoBehaviour
         UpdateInfoText("Tura gracza - wybierz kartę.");
     }
 
+    // ============ POMOCNICZE ============
+
     void UpdateInfoText(string msg)
     {
         if (infoText != null)
@@ -612,7 +687,7 @@ public class TurnManager : MonoBehaviour
             gv.SetTargetHighlight(false, false);
     }
 
-    // === COROUTINE DLA EFEKTÓW ===
+    // ============ EFEKTY LECZENIA / TARCZY / GRANATU ============
 
     IEnumerator HealEffectRoutine(UnitView targetView, float duration)
     {
