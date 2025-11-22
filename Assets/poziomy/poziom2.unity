@@ -270,7 +270,7 @@ MonoBehaviour:
   grenadeEffectObject: {fileID: 0}
   tankEffectObject: {fileID: 0}
   animator: {fileID: 87081399}
-  shootClip: {fileID: 7400000, guid: 506a3df66d70aa8468fdf61a4f76490a, type: 2}
+  shootClip: {fileID: 7400000, guid: 9b6361f6b72d5f34fa94e5b750075a37, type: 2}
   grenadeClip: {fileID: 7400000, guid: 26021fddc71457b4cb8d97e583bb11be, type: 2}
   germanShootClip: {fileID: 0}
   germanGrenadeClip: {fileID: 0}
@@ -958,7 +958,7 @@ MonoBehaviour:
   grenadeEffectObject: {fileID: 0}
   tankEffectObject: {fileID: 0}
   animator: {fileID: 361338628}
-  shootClip: {fileID: 7400000, guid: 506a3df66d70aa8468fdf61a4f76490a, type: 2}
+  shootClip: {fileID: 7400000, guid: 9b6361f6b72d5f34fa94e5b750075a37, type: 2}
   grenadeClip: {fileID: 7400000, guid: 26021fddc71457b4cb8d97e583bb11be, type: 2}
   germanShootClip: {fileID: 0}
   germanGrenadeClip: {fileID: 0}
@@ -2053,7 +2053,7 @@ MonoBehaviour:
   grenadeEffectObject: {fileID: 0}
   tankEffectObject: {fileID: 0}
   animator: {fileID: 830559233}
-  shootClip: {fileID: 7400000, guid: 506a3df66d70aa8468fdf61a4f76490a, type: 2}
+  shootClip: {fileID: 7400000, guid: 9b6361f6b72d5f34fa94e5b750075a37, type: 2}
   grenadeClip: {fileID: 7400000, guid: 26021fddc71457b4cb8d97e583bb11be, type: 2}
   germanShootClip: {fileID: 0}
   germanGrenadeClip: {fileID: 0}
