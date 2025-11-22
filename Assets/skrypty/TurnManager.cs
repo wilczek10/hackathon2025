@@ -2,6 +2,7 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 // ====== ENUMY ======
 
@@ -402,26 +403,29 @@ public class TurnManager : MonoBehaviour
         selectedCardUI = null;
         selectingTarget = false;
 
-        // *** NOWOŚĆ: od razu dobierz kartę, żeby znowu mieć 4 w ręce ***  
-        // (o ile gra się nie skończyła i w talii są karty)  
+        // wyłącz wszystkie ikonki celów  
+        ClearAllTargetHighlights();
+
+        // DOBIERZ od razu nową kartę, żeby znowu mieć 4 w ręce  
         if (!gameEnded)
         {
-            // jeśli w ręce jest mniej niż MaxHandSize, spróbuj dobrać  
             while (hand.cardsInHand.Count < hand.MaxHandSize && deck.drawPile.Count > 0)
             {
                 DrawCardToHand();
             }
         }
 
-        selectedCard = null;
-        selectedCardUI = null;
-        selectingTarget = false;
+        // Zamiast natychmiast włączać Niemców, uruchamiamy coroutine z opóźnieniem  
+        if (!gameEnded)
+            StartCoroutine(EnemyTurnWithDelay());
+    }
 
-        // wyłącz wszystkie ikonki celów  
-        ClearAllTargetHighlights();
+    IEnumerator EnemyTurnWithDelay()
+    {
+        // krótkie opóźnienie, żeby gracz zobaczył efekt (leczenie, hełm itd.)
+        yield return new WaitForSeconds(0.6f);  // możesz zmienić na 0.8f / 1.0f
 
-        // Koniec tury gracza  
-        EndPlayerAction();
+        EndPlayerAction(); // to uruchomi EnemyAction()
     }
 
     void RefreshAllUnitsUI()
@@ -580,6 +584,7 @@ public class TurnManager : MonoBehaviour
         else
             Debug.Log(msg);
     }
+
     void ClearAllTargetHighlights()
     {
         foreach (var pv in polishUnitViews)

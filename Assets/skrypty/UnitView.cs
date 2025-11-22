@@ -1,17 +1,17 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class UnitView : MonoBehaviour, IPointerClickHandler
 {
     [Header("References")]
-    public Image spriteImage;    // UI Image z grafik� jednostki
+    public Image spriteImage;    // UI Image z grafiką jednostki
     public Slider hpSlider;      // pasek HP
     public Slider shieldSlider;  // pasek tarczy
 
     [Header("Ikony celu / leczenia")]
     public GameObject targetIcon;    // celownik (dla ataku)
-    public GameObject healIcon;      // plus (dla leczenia / buff�w)
+    public GameObject healIcon;      // plus (dla leczenia / buffów)
 
     [Header("Typ postaci")]
     public bool isPolish;        // zaznacz dla Polaka
@@ -23,11 +23,12 @@ public class UnitView : MonoBehaviour, IPointerClickHandler
 
     [HideInInspector] public Unit unitData;
 
+    // Wywoływane z TurnManager.InitUnits
     public void InitUnit(Unit data)
     {
         unitData = data;
         UpdateUI();
-        SetTargetHighlight(false, false); // wy��cz ikony na start
+        SetTargetHighlight(false, false); // wyłącz ikony na start
     }
 
     void Start()
@@ -50,25 +51,35 @@ public class UnitView : MonoBehaviour, IPointerClickHandler
         }
 
         UpdateUI();
-        SetTargetHighlight(false, false); // wy��cz ikony na start
+        SetTargetHighlight(false, false); // wyłącz ikony na start
     }
 
     public void UpdateUI()
     {
         if (unitData == null) return;
 
+        // HP
         if (hpSlider != null)
         {
             hpSlider.maxValue = unitData.MaxHp;
             hpSlider.value = unitData.CurrentHp;
         }
 
+        // Tarcza
         if (shieldSlider != null)
         {
-            shieldSlider.maxValue = 5;
-            shieldSlider.value = unitData.Shield;
+            bool hasShield = unitData.Shield > 0;
+            shieldSlider.gameObject.SetActive(hasShield);
+
+            if (hasShield)
+            {
+                // np. max 3 – wtedy tarcza 3/3 wygląda na pełną
+                shieldSlider.maxValue = 3;
+                shieldSlider.value = Mathf.Min(unitData.Shield, (int)shieldSlider.maxValue);
+            }
         }
 
+        // Kolor sprite'a przy śmierci
         if (spriteImage != null)
         {
             spriteImage.color = unitData.IsAlive
