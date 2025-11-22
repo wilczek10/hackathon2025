@@ -2522,13 +2522,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 969982551}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 10.201406, y: 1.1739225, z: 2.6695018}
   m_LocalScale: {x: 1.33, y: 1.33, z: 1.33}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1412122762}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &969982553
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2995,7 +2995,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1308450096187368252, guid: e737c7e02bd9e384988cab849fa4b24a, type: 3}
+  m_Sprite: {fileID: 5477232912914331009, guid: 7d316e78c9f0c8546847a6e12cbc0120, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -3528,7 +3528,7 @@ Animator:
   m_GameObject: {fileID: 1223068559}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: b549100105cd2c242bd61b5baa8282a3, type: 2}
+  m_Controller: {fileID: 9100000, guid: e8122306f73df37488bbffc99f301901, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -4050,7 +4050,7 @@ MonoBehaviour:
   germanUnitViews:
   - {fileID: 1223068560}
   handPanel: {fileID: 555530456}
-  cardUIPrefab: {fileID: 3403166386240423585, guid: bd7e63896efabab4f85d34d3e7510fff, type: 3}
+  cardUIPrefab: {fileID: 3403166386240423585, guid: 1ef2d37cf019b8a4d8b1b0a4dfda11a1, type: 3}
   infoText: {fileID: 0}
   barykadaClip: {fileID: 7400000, guid: 689b3ef24b281ac41858a9489b6ea147, type: 2}
   barykadaObject: {fileID: 1164980077}

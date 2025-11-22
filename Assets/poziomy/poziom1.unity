@@ -256,7 +256,7 @@ MonoBehaviour:
   healIcon: {fileID: 797622884}
   isPolish: 1
   isGerman: 0
-  isMedic: 0
+  isTank: 0
   turnManager: {fileID: 1545795384}
   unitData:
     Name: 
@@ -268,11 +268,13 @@ MonoBehaviour:
   healEffectObject: {fileID: 252979204}
   shieldEffectObject: {fileID: 1817402180}
   grenadeEffectObject: {fileID: 0}
+  tankEffectObject: {fileID: 0}
   animator: {fileID: 87081399}
   shootClip: {fileID: 7400000, guid: 506a3df66d70aa8468fdf61a4f76490a, type: 2}
   grenadeClip: {fileID: 7400000, guid: 26021fddc71457b4cb8d97e583bb11be, type: 2}
   germanShootClip: {fileID: 0}
   germanGrenadeClip: {fileID: 0}
+  tankAttackClip: {fileID: 0}
 --- !u!114 &87081396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -676,7 +678,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 8164129559687692286, guid: c7f9b4325901d9f45ae7ca84ec3bc37d, type: 3}
+  m_Sprite: {fileID: -7148616984031046220, guid: c50bfbfd8f6f57d478dff0cf01c82b71, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1111,7 +1113,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 8164129559687692286, guid: c7f9b4325901d9f45ae7ca84ec3bc37d, type: 3}
+  m_Sprite: {fileID: -7148616984031046220, guid: c50bfbfd8f6f57d478dff0cf01c82b71, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1272,7 +1274,7 @@ MonoBehaviour:
   healIcon: {fileID: 1218274858}
   isPolish: 1
   isGerman: 0
-  isMedic: 0
+  isTank: 0
   turnManager: {fileID: 1545795384}
   unitData:
     Name: 
@@ -1284,11 +1286,13 @@ MonoBehaviour:
   healEffectObject: {fileID: 1483147193}
   shieldEffectObject: {fileID: 677559349}
   grenadeEffectObject: {fileID: 0}
+  tankEffectObject: {fileID: 0}
   animator: {fileID: 361338628}
   shootClip: {fileID: 7400000, guid: 506a3df66d70aa8468fdf61a4f76490a, type: 2}
   grenadeClip: {fileID: 7400000, guid: 26021fddc71457b4cb8d97e583bb11be, type: 2}
   germanShootClip: {fileID: 0}
   germanGrenadeClip: {fileID: 0}
+  tankAttackClip: {fileID: 0}
 --- !u!114 &361338625
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2384,7 +2388,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 8164129559687692286, guid: c7f9b4325901d9f45ae7ca84ec3bc37d, type: 3}
+  m_Sprite: {fileID: -7148616984031046220, guid: c50bfbfd8f6f57d478dff0cf01c82b71, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2708,7 +2712,7 @@ MonoBehaviour:
   healIcon: {fileID: 0}
   isPolish: 0
   isGerman: 1
-  isMedic: 0
+  isTank: 0
   turnManager: {fileID: 1545795384}
   unitData:
     Name: 
@@ -2720,11 +2724,13 @@ MonoBehaviour:
   healEffectObject: {fileID: 0}
   shieldEffectObject: {fileID: 0}
   grenadeEffectObject: {fileID: 831438692}
+  tankEffectObject: {fileID: 0}
   animator: {fileID: 0}
   shootClip: {fileID: 0}
   grenadeClip: {fileID: 0}
-  germanShootClip: {fileID: 7400000, guid: 0cbe4a11695f4d6468315d5c8ee7aa51, type: 2}
-  germanGrenadeClip: {fileID: 7400000, guid: 54c0d956291e285458e0325a1fd0903d, type: 2}
+  germanShootClip: {fileID: 7400000, guid: 563e1144ff26823458f8c2fe9f6b5c39, type: 2}
+  germanGrenadeClip: {fileID: 7400000, guid: 808f887e65e5f1a4d8bfb892529c4b4d, type: 2}
+  tankAttackClip: {fileID: 0}
 --- !u!114 &806372225
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2773,7 +2779,7 @@ Animator:
   m_GameObject: {fileID: 806372222}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 3d92dbe39fb88584caaeb5eb793e1393, type: 2}
+  m_Controller: {fileID: 9100000, guid: dc071ca34dfc2144fa06b856b5aa90e1, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -2913,7 +2919,7 @@ MonoBehaviour:
   healIcon: {fileID: 731055146}
   isPolish: 1
   isGerman: 0
-  isMedic: 1
+  isTank: 0
   turnManager: {fileID: 1545795384}
   unitData:
     Name: 
@@ -2925,11 +2931,13 @@ MonoBehaviour:
   healEffectObject: {fileID: 63015564}
   shieldEffectObject: {fileID: 864796221}
   grenadeEffectObject: {fileID: 0}
+  tankEffectObject: {fileID: 0}
   animator: {fileID: 830559233}
   shootClip: {fileID: 7400000, guid: 506a3df66d70aa8468fdf61a4f76490a, type: 2}
   grenadeClip: {fileID: 7400000, guid: 26021fddc71457b4cb8d97e583bb11be, type: 2}
   germanShootClip: {fileID: 0}
   germanGrenadeClip: {fileID: 0}
+  tankAttackClip: {fileID: 0}
 --- !u!114 &830559230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4412,7 +4420,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 8164129559687692286, guid: c7f9b4325901d9f45ae7ca84ec3bc37d, type: 3}
+  m_Sprite: {fileID: -7148616984031046220, guid: c50bfbfd8f6f57d478dff0cf01c82b71, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4698,7 +4706,7 @@ MonoBehaviour:
   healIcon: {fileID: 0}
   isPolish: 0
   isGerman: 1
-  isMedic: 0
+  isTank: 0
   turnManager: {fileID: 1545795384}
   unitData:
     Name: 
@@ -4710,11 +4718,13 @@ MonoBehaviour:
   healEffectObject: {fileID: 0}
   shieldEffectObject: {fileID: 0}
   grenadeEffectObject: {fileID: 173447430}
+  tankEffectObject: {fileID: 0}
   animator: {fileID: 0}
   shootClip: {fileID: 0}
   grenadeClip: {fileID: 0}
-  germanShootClip: {fileID: 7400000, guid: 0cbe4a11695f4d6468315d5c8ee7aa51, type: 2}
-  germanGrenadeClip: {fileID: 7400000, guid: 54c0d956291e285458e0325a1fd0903d, type: 2}
+  germanShootClip: {fileID: 7400000, guid: 563e1144ff26823458f8c2fe9f6b5c39, type: 2}
+  germanGrenadeClip: {fileID: 7400000, guid: 808f887e65e5f1a4d8bfb892529c4b4d, type: 2}
+  tankAttackClip: {fileID: 0}
 --- !u!114 &1223068561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4786,7 +4796,7 @@ Animator:
   m_GameObject: {fileID: 1223068559}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 3d92dbe39fb88584caaeb5eb793e1393, type: 2}
+  m_Controller: {fileID: 9100000, guid: dc071ca34dfc2144fa06b856b5aa90e1, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -4837,7 +4847,7 @@ MonoBehaviour:
   healIcon: {fileID: 0}
   isPolish: 0
   isGerman: 1
-  isMedic: 0
+  isTank: 0
   turnManager: {fileID: 1545795384}
   unitData:
     Name: 
@@ -4849,11 +4859,13 @@ MonoBehaviour:
   healEffectObject: {fileID: 0}
   shieldEffectObject: {fileID: 0}
   grenadeEffectObject: {fileID: 1419378033}
+  tankEffectObject: {fileID: 0}
   animator: {fileID: 0}
   shootClip: {fileID: 0}
   grenadeClip: {fileID: 0}
-  germanShootClip: {fileID: 7400000, guid: 0cbe4a11695f4d6468315d5c8ee7aa51, type: 2}
-  germanGrenadeClip: {fileID: 7400000, guid: 54c0d956291e285458e0325a1fd0903d, type: 2}
+  germanShootClip: {fileID: 7400000, guid: 563e1144ff26823458f8c2fe9f6b5c39, type: 2}
+  germanGrenadeClip: {fileID: 7400000, guid: 808f887e65e5f1a4d8bfb892529c4b4d, type: 2}
+  tankAttackClip: {fileID: 0}
 --- !u!114 &1286051216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4925,7 +4937,7 @@ Animator:
   m_GameObject: {fileID: 1286051214}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 3d92dbe39fb88584caaeb5eb793e1393, type: 2}
+  m_Controller: {fileID: 9100000, guid: dc071ca34dfc2144fa06b856b5aa90e1, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -5542,6 +5554,7 @@ MonoBehaviour:
   - {fileID: 176058783}
   - {fileID: 1167212619}
   - {fileID: 704177228}
+  - {fileID: 327933234}
   selectedCard:
     CardType: 0
     CardName: 
