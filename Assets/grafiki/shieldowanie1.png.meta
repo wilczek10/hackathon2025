@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 99b47a3d5e4ef1842aa65c9bcad3bdb4
+guid: c8ad1f7055ac96c489542f186bc7e3b9
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1872283391895597226
-    second: leczenie_0
+      213: 8584790024888318230
+    second: shieldowanie1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: leczenie_0
+      name: shieldowanie1_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 346
-        height: 346
+        x: 10
+        y: 21
+        width: 79
+        height: 104
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 65f0333cc205406e0800000000000000
-      internalID: -1872283391895597226
+      spriteID: 619f8c02b0d432770800000000000000
+      internalID: 8584790024888318230
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      leczenie_0: -1872283391895597226
+      shieldowanie1_0: 8584790024888318230
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -249,6 +249,7 @@ public class TurnManager : MonoBehaviour
 
         if (selectedCard.CardType == CardType.Grenade)
         {
+            // granat od razu – bez wybierania celu
             PlayCardGrenade();
             AfterCardPlayed();
             return;
@@ -337,16 +338,24 @@ public class TurnManager : MonoBehaviour
     {
         Debug.Log("PlayCardOnTarget: " + card.CardName + " na " + target.Name);
 
+        // "Aktywny Polak" – na razie zakładamy pierwszego na liście
+        UnitView actingPole = polishUnitViews != null && polishUnitViews.Count > 0
+            ? polishUnitViews[0]
+            : null;
+
         switch (card.CardType)
         {
             case CardType.Pistol:
+                // animacja strzału Polaka
+                if (actingPole != null)
+                    actingPole.PlayShootAnimation();
+
                 DealDamage(target, 3);
                 break;
 
             case CardType.Bandage:
                 Heal(target, 2);
-
-                // WŁĄCZAMY EFEKT LECZENIA NA 1 SEKUNDĘ
+                // efekt leczenia na 1s
                 if (targetView != null)
                 {
                     StartCoroutine(HealEffectRoutine(targetView, 1f));
@@ -355,6 +364,11 @@ public class TurnManager : MonoBehaviour
 
             case CardType.Helmet:
                 target.Shield += 2;
+                // efekt tarczy na 0.4s
+                if (targetView != null)
+                {
+                    StartCoroutine(ShieldEffectRoutine(targetView, 0.4f));
+                }
                 break;
         }
 
@@ -363,12 +377,27 @@ public class TurnManager : MonoBehaviour
 
     void PlayCardGrenade()
     {
+        // "Aktywny Polak" – pierwszy na liście rzuca animację granatu
+        UnitView actingPole = polishUnitViews != null && polishUnitViews.Count > 0
+            ? polishUnitViews[0]
+            : null;
+
+        if (actingPole != null)
+            actingPole.PlayGrenadeThrowAnimation();
+
+        // Efekt granatu u wszystkich żywych Niemców na 1s + dmg
         var aliveGermans = germanUnitViews.Where(v => v.unitData.IsAlive).ToList();
+
         foreach (var gv in aliveGermans)
         {
+            // efekt wizualny nad Niemcem
+            StartCoroutine(GrenadeEffectRoutine(gv, 1f));
+
+            // obrażenia (1–2)
             int dmg = Random.Range(1, 3);
             DealDamage(gv.unitData, dmg);
         }
+
         RefreshAllUnitsUI();
         UpdateInfoText("Rzucasz granat w Niemców!");
     }
@@ -484,6 +513,11 @@ public class TurnManager : MonoBehaviour
             case 0:
                 {
                     UnitView targetPole = alivePoles[Random.Range(0, alivePoles.Count)];
+
+                    // wybierz losowego żywego Niemca jako strzelającego
+                    UnitView shootingGerman = aliveGermans[Random.Range(0, aliveGermans.Count)];
+                    shootingGerman.PlayGermanShootAnimation();
+
                     DealDamage(targetPole.unitData, 3);
                     UpdateInfoText("Niemcy: strzał w " + targetPole.unitData.Name);
                 }
@@ -491,6 +525,10 @@ public class TurnManager : MonoBehaviour
 
             case 1:
                 {
+                    // wybierz losowego żywego Niemca jako rzucającego granat
+                    UnitView throwingGerman = aliveGermans[Random.Range(0, aliveGermans.Count)];
+                    throwingGerman.PlayGermanGrenadeAnimation();
+
                     foreach (var pv in alivePoles)
                     {
                         int dmg = Random.Range(1, 3);
@@ -574,18 +612,32 @@ public class TurnManager : MonoBehaviour
             gv.SetTargetHighlight(false, false);
     }
 
-    // === EFEKT LECZENIA ===
+    // === COROUTINE DLA EFEKTÓW ===
+
     IEnumerator HealEffectRoutine(UnitView targetView, float duration)
     {
         if (targetView == null) yield break;
 
-        // włącz efekt
         targetView.ShowHealEffect();
-
-        // czekaj duration sekund
         yield return new WaitForSeconds(duration);
-
-        // wyłącz efekt
         targetView.HideHealEffect();
+    }
+
+    IEnumerator ShieldEffectRoutine(UnitView targetView, float duration)
+    {
+        if (targetView == null) yield break;
+
+        targetView.ShowShieldEffect();
+        yield return new WaitForSeconds(duration);
+        targetView.HideShieldEffect();
+    }
+
+    IEnumerator GrenadeEffectRoutine(UnitView targetView, float duration)
+    {
+        if (targetView == null) yield break;
+
+        targetView.ShowGrenadeEffect();
+        yield return new WaitForSeconds(duration);
+        targetView.HideGrenadeEffect();
     }
 }

@@ -1,28 +1,16 @@
 fileFormatVersion: 2
-guid: d26ff166b35f0974387b5b3bd4a451da
+guid: c28f54c9e278b7b49b31a70a9f30a450
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2282156963208334551
-    second: leczenie2_0
+      213: 622410950267647292
+    second: shieldowanie4_0
   - first:
-      213: 3342031984407161232
-    second: leczenie2_1
+      213: 5285787268251484761
+    second: shieldowanie4_1
   - first:
-      213: 6746726642227792509
-    second: leczenie2_2
-  - first:
-      213: 4610505430427969962
-    second: leczenie2_3
-  - first:
-      213: -2077991229245153996
-    second: leczenie2_4
-  - first:
-      213: -3914286954767001325
-    second: leczenie2_5
-  - first:
-      213: -1302968475813222661
-    second: leczenie2_6
+      213: -2971131423097596103
+    second: shieldowanie4_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -64,7 +52,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -144,13 +132,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: leczenie2_0
+      name: shieldowanie4_0
       rect:
         serializedVersion: 2
-        x: 8
-        y: 97
-        width: 16
-        height: 17
+        x: 10
+        y: 21
+        width: 83
+        height: 111
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -159,20 +147,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 923784655562450e0800000000000000
-      internalID: -2282156963208334551
+      spriteID: c35340b267f33a800800000000000000
+      internalID: 622410950267647292
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: leczenie2_1
+      name: shieldowanie4_1
       rect:
         serializedVersion: 2
-        x: 47
-        y: 88
-        width: 16
-        height: 17
+        x: 56
+        y: 122
+        width: 10
+        height: 10
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -181,20 +169,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 099259a0268416e20800000000000000
-      internalID: 3342031984407161232
+      spriteID: 9528962e383ea5940800000000000000
+      internalID: 5285787268251484761
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: leczenie2_2
+      name: shieldowanie4_2
       rect:
         serializedVersion: 2
-        x: 76
-        y: 98
-        width: 16
-        height: 17
+        x: 83
+        y: 122
+        width: 10
+        height: 10
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -203,96 +191,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d7ac6aaa22031ad50800000000000000
-      internalID: 6746726642227792509
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: leczenie2_3
-      rect:
-        serializedVersion: 2
-        x: 26
-        y: 67
-        width: 16
-        height: 17
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: aa92bafe24ecbff30800000000000000
-      internalID: 4610505430427969962
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: leczenie2_4
-      rect:
-        serializedVersion: 2
-        x: 63
-        y: 52
-        width: 16
-        height: 17
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 43d17769cfd7923e0800000000000000
-      internalID: -2077991229245153996
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: leczenie2_5
-      rect:
-        serializedVersion: 2
-        x: 15
-        y: 33
-        width: 16
-        height: 17
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 319da20e0c8ada9c0800000000000000
-      internalID: -3914286954767001325
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: leczenie2_6
-      rect:
-        serializedVersion: 2
-        x: 55
-        y: 22
-        width: 16
-        height: 17
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: bf6ee9d131deaede0800000000000000
-      internalID: -1302968475813222661
+      spriteID: 937544166bb64c6d0800000000000000
+      internalID: -2971131423097596103
       vertices: []
       indices: 
       edges: []
@@ -301,7 +201,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -311,13 +211,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      leczenie2_0: -2282156963208334551
-      leczenie2_1: 3342031984407161232
-      leczenie2_2: 6746726642227792509
-      leczenie2_3: 4610505430427969962
-      leczenie2_4: -2077991229245153996
-      leczenie2_5: -3914286954767001325
-      leczenie2_6: -1302968475813222661
+      shieldowanie4_0: 622410950267647292
+      shieldowanie4_1: 5285787268251484761
+      shieldowanie4_2: -2971131423097596103
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

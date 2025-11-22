@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 99b47a3d5e4ef1842aa65c9bcad3bdb4
+guid: 4927c221101f89044948e9e67bd622d3
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1872283391895597226
-    second: leczenie_0
+      213: -3571569397387068893
+    second: wubuch-granat2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: leczenie_0
+      name: wubuch-granat2_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 346
-        height: 346
+        x: 5
+        y: 14
+        width: 126
+        height: 91
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 65f0333cc205406e0800000000000000
-      internalID: -1872283391895597226
+      spriteID: 32a761a5e8c3f6ec0800000000000000
+      internalID: -3571569397387068893
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      leczenie_0: -1872283391895597226
+      wubuch-granat2_0: -3571569397387068893
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 99b47a3d5e4ef1842aa65c9bcad3bdb4
+guid: 4f7b72be0315d0d4bbac2df2ff109e93
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1872283391895597226
-    second: leczenie_0
+      213: 2068125796761532451
+    second: polska-strzelanie2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: leczenie_0
+      name: polska-strzelanie2_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 346
-        height: 346
+        x: 22
+        y: 1
+        width: 188
+        height: 198
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 65f0333cc205406e0800000000000000
-      internalID: -1872283391895597226
+      spriteID: 328faca647573bc10800000000000000
+      internalID: 2068125796761532451
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      leczenie_0: -1872283391895597226
+      polska-strzelanie2_0: 2068125796761532451
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
