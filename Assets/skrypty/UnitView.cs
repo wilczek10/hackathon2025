@@ -5,18 +5,18 @@ using UnityEngine.EventSystems;
 public class UnitView : MonoBehaviour, IPointerClickHandler
 {
     [Header("References")]
-    public Image spriteImage;    // UI Image z grafiką jednostki
-    public Slider hpSlider;      // pasek HP
-    public Slider shieldSlider;  // pasek tarczy
+    public Image spriteImage;
+    public Slider hpSlider;
+    public Slider shieldSlider;
 
     [Header("Ikony celu / leczenia")]
-    public GameObject targetIcon;  // celownik (dla ataku)
-    public GameObject healIcon;    // plus (dla trybu leczenia / buffów)
+    public GameObject targetIcon;
+    public GameObject healIcon;
 
     [Header("Typ postaci")]
-    public bool isPolish;    // zaznacz dla Polaka
-    public bool isGerman;    // zaznacz dla Niemca
-    public bool isMedic;     // zaznacz tylko dla medyka
+    public bool isPolish;
+    public bool isGerman;
+    public bool isTank;
 
     [Header("Logic")]
     public TurnManager turnManager;
@@ -24,33 +24,35 @@ public class UnitView : MonoBehaviour, IPointerClickHandler
     [HideInInspector] public Unit unitData;
 
     [Header("Obiekty efektów (dzieci)")]
-    public GameObject healEffectObject;    // obiekt "Leczenie" u Polaków
-    public GameObject shieldEffectObject;  // obiekt "Tarcza" u Polaków
-    public GameObject grenadeEffectObject; // obiekt "Granat" u Niemców
+    public GameObject healEffectObject;
+    public GameObject shieldEffectObject;
+    public GameObject grenadeEffectObject;
+    public GameObject tankEffectObject;
 
     [Header("Animacje Polaka (klipy)")]
-    public Animator animator;          // Animator przypięty do Polaka
-    public AnimationClip shootClip;    // klip animacji strzału
-    public AnimationClip grenadeClip;  // klip animacji rzutu granatem
+    public Animator animator;
+    public AnimationClip shootClip;
+    public AnimationClip grenadeClip;
 
     [Header("Animacje Niemca (klipy)")]
-    public AnimationClip germanShootClip;      // animacja strzału Niemca  
-    public AnimationClip germanGrenadeClip;    // animacja granatu Niemca
+    public AnimationClip germanShootClip;
+    public AnimationClip germanGrenadeClip;
+    public AnimationClip tankAttackClip;
 
-    // Wywoływane z TurnManager.InitUnits
     public void InitUnit(Unit data)
     {
         unitData = data;
         UpdateUI();
-        SetTargetHighlight(false, false); // wyłącz ikony na start
+        SetTargetHighlight(false, false);
 
-        // Upewnij się, że wszystkie efekty są wyłączone na starcie
         if (healEffectObject != null)
             healEffectObject.SetActive(false);
         if (shieldEffectObject != null)
             shieldEffectObject.SetActive(false);
         if (grenadeEffectObject != null)
             grenadeEffectObject.SetActive(false);
+        if (tankEffectObject != null)
+            tankEffectObject.SetActive(false);
     }
 
     void Start()
@@ -61,71 +63,63 @@ public class UnitView : MonoBehaviour, IPointerClickHandler
             if (isGerman) team = Team.Germans;
             else if (isPolish) team = Team.Poles;
 
+            UnitType unitType = UnitType.Soldier;
+            if (isTank) unitType = UnitType.Tank;
+
+            int maxHp = 6;
+            int currentHp = 6;
+            int shield = 0;
+
+            if (isGerman)
+            {
+                maxHp = isTank ? 12 : 5;
+                currentHp = isTank ? 12 : 5;
+                shield = isTank ? 5 : 2;
+            }
+
             unitData = new Unit
             {
                 Name = gameObject.name,
                 Team = team,
-                UnitType = isMedic ? UnitType.Medic : UnitType.Soldier,
-                MaxHp = isGerman ? 5 : 6,
-                CurrentHp = isGerman ? 5 : 6,
-                Shield = isGerman ? 2 : 0
+                UnitType = unitType,
+                MaxHp = maxHp,
+                CurrentHp = currentHp,
+                Shield = shield
             };
         }
 
-        void Start()
+        if (animator == null)
         {
-            if (unitData == null)
-            {
-                Team team = Team.Poles;
-                if (isGerman) team = Team.Germans;
-                else if (isPolish) team = Team.Poles;
-
-                unitData = new Unit
-                {
-                    Name = gameObject.name,
-                    Team = team,
-                    UnitType = isMedic ? UnitType.Medic : UnitType.Soldier,
-                    MaxHp = isGerman ? 5 : 6,
-                    CurrentHp = isGerman ? 5 : 6,
-                    Shield = isGerman ? 2 : 0
-                };
-            }
-
-            // >>> NOWE: spróbuj automatycznie znaleźć Animatora, jeśli nie jest ustawiony
+            animator = GetComponent<Animator>();
             if (animator == null)
             {
-                animator = GetComponent<Animator>();
-                if (animator == null)
-                {
-                    animator = GetComponentInChildren<Animator>();
-                }
+                animator = GetComponentInChildren<Animator>();
             }
-
-            UpdateUI();
-            SetTargetHighlight(false, false);
-
-            // Na wszelki wypadek wyłącz efekty na starcie
-            if (healEffectObject != null)
-                healEffectObject.SetActive(false);
-            if (shieldEffectObject != null)
-                shieldEffectObject.SetActive(false);
-            if (grenadeEffectObject != null)
-                grenadeEffectObject.SetActive(false);
         }
+
+        UpdateUI();
+        SetTargetHighlight(false, false);
+
+        if (healEffectObject != null)
+            healEffectObject.SetActive(false);
+        if (shieldEffectObject != null)
+            shieldEffectObject.SetActive(false);
+        if (grenadeEffectObject != null)
+            grenadeEffectObject.SetActive(false);
+        if (tankEffectObject != null)
+            tankEffectObject.SetActive(false);
     }
 
     public void UpdateUI()
     {
         if (unitData == null) return;
 
-        // HP
         if (hpSlider != null)
         {
             hpSlider.maxValue = unitData.MaxHp;
             hpSlider.value = unitData.CurrentHp;
         }
 
-        // Tarcza
         if (shieldSlider != null)
         {
             bool hasShield = unitData.Shield > 0;
@@ -133,12 +127,11 @@ public class UnitView : MonoBehaviour, IPointerClickHandler
 
             if (hasShield)
             {
-                shieldSlider.maxValue = 3;
+                shieldSlider.maxValue = isTank ? 5 : 3;
                 shieldSlider.value = Mathf.Min(unitData.Shield, (int)shieldSlider.maxValue);
             }
         }
 
-        // Kolor sprite'a przy śmierci
         if (spriteImage != null)
         {
             spriteImage.color = unitData.IsAlive
@@ -163,8 +156,6 @@ public class UnitView : MonoBehaviour, IPointerClickHandler
             turnManager.OnUnitClicked(this);
         }
     }
-
-    // === EFEKTY – proste włącz/wyłącz ===
 
     public void ShowHealEffect()
     {
@@ -208,11 +199,20 @@ public class UnitView : MonoBehaviour, IPointerClickHandler
             grenadeEffectObject.SetActive(false);
     }
 
-    // === ANIMACJE POLAKA (na podstawie klipów) ===
+    public void ShowTankEffect()
+    {
+        if (tankEffectObject != null)
+            tankEffectObject.SetActive(true);
+        else
+            Debug.LogWarning("ShowTankEffect: tankEffectObject == null na obiekcie: " + gameObject.name);
+    }
 
-    /// <summary>
-    /// Odpala animację strzału Polaka przy użyciu klipu przypiętego w Inspectorze.
-    /// </summary>
+    public void HideTankEffect()
+    {
+        if (tankEffectObject != null)
+            tankEffectObject.SetActive(false);
+    }
+
     public void PlayShootAnimation()
     {
         if (animator == null || shootClip == null)
@@ -224,9 +224,6 @@ public class UnitView : MonoBehaviour, IPointerClickHandler
         animator.Play(shootClip.name, 0, 0f);
     }
 
-    /// <summary>
-    /// Odpala animację rzutu granatem Polaka.
-    /// </summary>
     public void PlayGrenadeThrowAnimation()
     {
         if (animator == null || grenadeClip == null)
@@ -237,8 +234,6 @@ public class UnitView : MonoBehaviour, IPointerClickHandler
 
         animator.Play(grenadeClip.name, 0, 0f);
     }
-
-    // === ANIMACJE NIEMCA ===
 
     public void PlayGermanShootAnimation()
     {
@@ -274,5 +269,26 @@ public class UnitView : MonoBehaviour, IPointerClickHandler
         }
 
         animator.Play(germanGrenadeClip.name, 0, 0f);
+    }
+
+    public void PlayTankAttackAnimation()
+    {
+        if (animator == null)
+        {
+            animator = GetComponent<Animator>();
+            if (animator == null)
+                animator = GetComponentInChildren<Animator>();
+        }
+
+        if (animator == null || tankAttackClip == null)
+        {
+            Debug.LogWarning("PlayTankAttackAnimation: brak animatora lub klipu na obiekcie: " + gameObject.name);
+            return;
+        }
+
+        animator.Play(tankAttackClip.name, 0, 0f);
+
+        ShowTankEffect();
+        Invoke("HideTankEffect", 1f);
     }
 }

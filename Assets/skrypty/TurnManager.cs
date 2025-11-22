@@ -14,7 +14,7 @@ public enum Team
 public enum UnitType
 {
     Soldier,
-    Medic
+    Tank
 }
 
 public enum CardType
@@ -138,15 +138,15 @@ public class TurnManager : MonoBehaviour
     public Text infoText;
 
     [Header("Animacje barykady / tła")]
-    public AnimationClip barykadaClip;       // przeciągasz plik animacji barykady
-    public GameObject barykadaObject;        // obiekt barykady (opcjonalnie, jeśli potrzebny)
-    public Animator barykadaAnimator;        // Animator barykady
+    public AnimationClip barykadaClip;
+    public GameObject barykadaObject;
+    public Animator barykadaAnimator;
 
-    public BackgroundScroll backgroundScroll;    // przeciągasz tło z Unity
-    public float waitTimeAfterScroll = 0.5f;     // pauza po animacji tła
+    public BackgroundScroll backgroundScroll;
+    public float waitTimeAfterScroll = 0.5f;
 
     [Header("Deck Visual")]
-    public GameObject[] deckBackCards; // np. 3–5 obrazków reprezentujących stos
+    public GameObject[] deckBackCards;
 
     private Deck deck;
     private Hand hand;
@@ -158,8 +158,6 @@ public class TurnManager : MonoBehaviour
     private bool selectingTarget;
 
     private bool gameEnded = false;
-
-    // ============ START / INICJALIZACJA ============
 
     void Start()
     {
@@ -183,36 +181,39 @@ public class TurnManager : MonoBehaviour
 
     void InitUnits()
     {
-        // Polacy – np. drugi to medyk
-        for (int i = 0; i < polishUnitViews.Count; i++)
+        // Polacy - wszyscy żołnierze (bez medyka)
+        foreach (var pv in polishUnitViews)
         {
-            UnitType uType = (i == 1) ? UnitType.Medic : UnitType.Soldier;
-
             var unit = new Unit
             {
-                Name = polishUnitViews[i].gameObject.name,
+                Name = pv.gameObject.name,
                 Team = Team.Poles,
-                UnitType = uType,
+                UnitType = UnitType.Soldier,
                 MaxHp = 6,
                 CurrentHp = 6,
                 Shield = 0
             };
 
-            polishUnitViews[i].InitUnit(unit);
-            polishUnitViews[i].turnManager = this;
+            pv.InitUnit(unit);
+            pv.turnManager = this;
         }
 
-        // Niemcy
+        // Niemcy - żołnierze i czołg
         foreach (var gv in germanUnitViews)
         {
+            UnitType unitType = gv.isTank ? UnitType.Tank : UnitType.Soldier;
+            int maxHp = gv.isTank ? 12 : 5;
+            int currentHp = gv.isTank ? 12 : 5;
+            int shield = gv.isTank ? 5 : 2;
+
             var unit = new Unit
             {
                 Name = gv.gameObject.name,
                 Team = Team.Germans,
-                UnitType = UnitType.Soldier,
-                MaxHp = 5,
-                CurrentHp = 5,
-                Shield = 2
+                UnitType = unitType,
+                MaxHp = maxHp,
+                CurrentHp = currentHp,
+                Shield = shield
             };
 
             gv.InitUnit(unit);
@@ -220,23 +221,17 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    // ============ TALIA WIZUALNA ============
-
     void UpdateDeckVisual()
     {
         if (deckBackCards == null || deckBackCards.Length == 0 || deck == null) return;
 
         int cardsLeft = deck.drawPile.Count;
 
-        // prosty przykład: pokazujemy/ukrywamy kolejne rewersy
         for (int i = 0; i < deckBackCards.Length; i++)
         {
-            // możesz dobrać logikę – np. każdy reprezentuje ~3 karty
             deckBackCards[i].SetActive(cardsLeft > i * 3);
         }
     }
-
-    // ============ KARTY I UI ============
 
     public void DrawCardToHand()
     {
@@ -249,8 +244,8 @@ public class TurnManager : MonoBehaviour
             return;
         }
 
-        bool medicAlive = polishUnitViews.Any(
-            v => v.unitData.UnitType == UnitType.Medic && v.unitData.IsAlive);
+        // Bandage są teraz nieużywane, ale zostawiamy logikę na przyszłość
+        bool medicAlive = false;
 
         if (!medicAlive && drawn.CardType == CardType.Bandage)
         {
@@ -285,7 +280,6 @@ public class TurnManager : MonoBehaviour
 
         if (selectedCard.CardType == CardType.Grenade)
         {
-            // granat od razu – bez wybierania celu
             PlayCardGrenade();
             AfterCardPlayed();
             return;
@@ -297,14 +291,16 @@ public class TurnManager : MonoBehaviour
         {
             case CardType.Pistol:
                 foreach (var gv in germanUnitViews)
-                    gv.SetTargetHighlight(true, false);
+                    if (gv.unitData.IsAlive)
+                        gv.SetTargetHighlight(true, false);
                 UpdateInfoText("Wybierz NIEMCA dla karty: " + selectedCard.CardName);
                 break;
 
             case CardType.Bandage:
             case CardType.Helmet:
                 foreach (var pv in polishUnitViews)
-                    pv.SetTargetHighlight(false, true);
+                    if (pv.unitData.IsAlive)
+                        pv.SetTargetHighlight(false, true);
                 UpdateInfoText("Wybierz POLAKA dla karty: " + selectedCard.CardName);
                 break;
         }
@@ -374,7 +370,6 @@ public class TurnManager : MonoBehaviour
     {
         Debug.Log("PlayCardOnTarget: " + card.CardName + " na " + target.Name);
 
-        // "Aktywny Polak" – na razie zakładamy pierwszego na liście
         UnitView actingPole = polishUnitViews != null && polishUnitViews.Count > 0
             ? polishUnitViews[0]
             : null;
@@ -382,7 +377,6 @@ public class TurnManager : MonoBehaviour
         switch (card.CardType)
         {
             case CardType.Pistol:
-                // animacja strzału Polaka
                 if (actingPole != null)
                     actingPole.PlayShootAnimation();
 
@@ -391,7 +385,6 @@ public class TurnManager : MonoBehaviour
 
             case CardType.Bandage:
                 Heal(target, 2);
-                // efekt leczenia na 1s
                 if (targetView != null)
                 {
                     StartCoroutine(HealEffectRoutine(targetView, 1f));
@@ -400,7 +393,6 @@ public class TurnManager : MonoBehaviour
 
             case CardType.Helmet:
                 target.Shield += 2;
-                // efekt tarczy na 0.4s
                 if (targetView != null)
                 {
                     StartCoroutine(ShieldEffectRoutine(targetView, 0.4f));
@@ -413,7 +405,6 @@ public class TurnManager : MonoBehaviour
 
     void PlayCardGrenade()
     {
-        // "Aktywny Polak" – pierwszy na liście rzuca animację granatu
         UnitView actingPole = polishUnitViews != null && polishUnitViews.Count > 0
             ? polishUnitViews[0]
             : null;
@@ -421,16 +412,12 @@ public class TurnManager : MonoBehaviour
         if (actingPole != null)
             actingPole.PlayGrenadeThrowAnimation();
 
-        // Efekt granatu u wszystkich żywych Niemców na 1s + dmg
         var aliveGermans = germanUnitViews.Where(v => v.unitData.IsAlive).ToList();
 
         foreach (var gv in aliveGermans)
         {
-            // efekt wizualny nad Niemcem
             StartCoroutine(GrenadeEffectRoutine(gv, 1f));
-
-            // obrażenia (1–2) Uwaga: Random.Range(int,int) jest < max, więc (1,2) da zawsze 1.
-            int dmg = Random.Range(1, 3); // jeśli chcesz 1 lub 2
+            int dmg = Random.Range(1, 3);
             DealDamage(gv.unitData, dmg);
         }
 
@@ -481,8 +468,6 @@ public class TurnManager : MonoBehaviour
         foreach (var v in germanUnitViews) v.UpdateUI();
     }
 
-    // ============ DAMAGE / HEAL ============
-
     public void DealDamage(Unit target, int amount)
     {
         if (!target.IsAlive) return;
@@ -518,8 +503,6 @@ public class TurnManager : MonoBehaviour
         RefreshAllUnitsUI();
     }
 
-    // ============ FLOW TUR ============
-
     public void EndPlayerAction()
     {
         if (gameEnded) return;
@@ -542,49 +525,84 @@ public class TurnManager : MonoBehaviour
             return;
         }
 
-        int action = Random.Range(0, 3);
+        // Sprawdzamy czy jest żywy czołg
+        bool tankAlive = aliveGermans.Any(g => g.unitData.UnitType == UnitType.Tank);
+
+        int action;
+        if (tankAlive && Random.Range(0, 5) < 2) // 40% szans na atak czołgu
+        {
+            action = 3;
+        }
+        else
+        {
+            action = Random.Range(0, 3);
+        }
 
         switch (action)
         {
             case 0:
                 {
                     UnitView targetPole = alivePoles[Random.Range(0, alivePoles.Count)];
-
-                    // wybierz losowego żywego Niemca jako strzelającego
-                    UnitView shootingGerman = aliveGermans[Random.Range(0, aliveGermans.Count)];
-                    shootingGerman.PlayGermanShootAnimation();
-
-                    DealDamage(targetPole.unitData, 3);
-                    UpdateInfoText("Niemcy: strzał w " + targetPole.unitData.Name);
+                    var aliveSoldiers = aliveGermans.Where(g => g.unitData.UnitType == UnitType.Soldier).ToList();
+                    if (aliveSoldiers.Count > 0)
+                    {
+                        UnitView shootingGerman = aliveSoldiers[Random.Range(0, aliveSoldiers.Count)];
+                        shootingGerman.PlayGermanShootAnimation();
+                        DealDamage(targetPole.unitData, 3);
+                        UpdateInfoText("Niemcy: strzał w " + targetPole.unitData.Name);
+                    }
                 }
                 break;
 
             case 1:
                 {
-                    // wybierz losowego żywego Niemca jako rzucającego granat
-                    UnitView throwingGerman = aliveGermans[Random.Range(0, aliveGermans.Count)];
-                    throwingGerman.PlayGermanGrenadeAnimation();
-
-                    foreach (var pv in alivePoles)
+                    var aliveSoldiers = aliveGermans.Where(g => g.unitData.UnitType == UnitType.Soldier).ToList();
+                    if (aliveSoldiers.Count > 0)
                     {
-                        int dmg = Random.Range(1, 3);
-                        DealDamage(pv.unitData, dmg);
+                        UnitView throwingGerman = aliveSoldiers[Random.Range(0, aliveSoldiers.Count)];
+                        throwingGerman.PlayGermanGrenadeAnimation();
+
+                        foreach (var pv in alivePoles)
+                        {
+                            int dmg = Random.Range(1, 3);
+                            DealDamage(pv.unitData, dmg);
+                        }
+                        UpdateInfoText("Niemcy: granat w wszystkich Polaków.");
                     }
-                    UpdateInfoText("Niemcy: granat w wszystkich Polaków.");
                 }
                 break;
 
             case 2:
                 {
-                    UnitView targetGerman = aliveGermans[Random.Range(0, aliveGermans.Count)];
-                    Heal(targetGerman.unitData, 2);
-                    UpdateInfoText("Niemcy: leczenie " + targetGerman.unitData.Name);
+                    var aliveSoldiers = aliveGermans.Where(g => g.unitData.UnitType == UnitType.Soldier).ToList();
+                    if (aliveSoldiers.Count > 0)
+                    {
+                        UnitView targetGerman = aliveSoldiers[Random.Range(0, aliveSoldiers.Count)];
+                        Heal(targetGerman.unitData, 2);
+                        UpdateInfoText("Niemcy: leczenie " + targetGerman.unitData.Name);
+                    }
+                }
+                break;
+
+            case 3: // Akcja czołgu
+                {
+                    UnitView tank = aliveGermans.FirstOrDefault(g => g.unitData.UnitType == UnitType.Tank);
+                    if (tank != null)
+                    {
+                        tank.PlayTankAttackAnimation();
+
+                        foreach (var pv in alivePoles)
+                        {
+                            int dmg = Random.Range(3, 5); // 1-4 obrażeń
+                            DealDamage(pv.unitData, dmg);
+                        }
+                        UpdateInfoText("CZOLG atakuje wszystkich Polaków!");
+                    }
                 }
                 break;
         }
 
         RefreshAllUnitsUI();
-
         state = TurnState.DrawPhase;
         DrawPhase();
     }
@@ -598,24 +616,16 @@ public class TurnManager : MonoBehaviour
         CheckEndConditions();
     }
 
-    // ============ PRZEJŚCIE SCENY / ANIMACJA TŁA ============
-
     public void StartLevelTransition()
     {
         if (backgroundScroll != null)
         {
-            // start przesuwania tła
             backgroundScroll.StartScrolling();
-
-            // obliczenie czasu potrzebnego na przesunięcie (dystans / prędkość)
             float loadTime = (backgroundScroll.distance / backgroundScroll.scrollSpeed) + waitTimeAfterScroll;
-
-            // po zakończeniu animacji → przejście do następnej sceny
             Invoke(nameof(LoadNextScene), loadTime);
         }
         else
         {
-            // jeśli nie ma backgroundScroll, od razu przechodzimy do sceny
             Invoke(nameof(LoadNextScene), waitTimeAfterScroll);
         }
     }
@@ -624,8 +634,6 @@ public class TurnManager : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
-
-    // ============ SPRAWDZANIE KOŃCA GRY ============
 
     void CheckEndConditions()
     {
@@ -639,13 +647,10 @@ public class TurnManager : MonoBehaviour
             gameEnded = true;
             UpdateInfoText("WYGRANA! Wszyscy Niemcy pokonani.");
 
-            // animacja upadku barykady
             if (barykadaAnimator != null && barykadaClip != null)
                 barykadaAnimator.Play(barykadaClip.name);
 
-            // przejście sceny po 1.5 sek
             Invoke(nameof(StartLevelTransition), 1.5f);
-
             return;
         }
 
@@ -668,8 +673,6 @@ public class TurnManager : MonoBehaviour
         UpdateInfoText("Tura gracza - wybierz kartę.");
     }
 
-    // ============ POMOCNICZE ============
-
     void UpdateInfoText(string msg)
     {
         if (infoText != null)
@@ -687,12 +690,9 @@ public class TurnManager : MonoBehaviour
             gv.SetTargetHighlight(false, false);
     }
 
-    // ============ EFEKTY LECZENIA / TARCZY / GRANATU ============
-
     IEnumerator HealEffectRoutine(UnitView targetView, float duration)
     {
         if (targetView == null) yield break;
-
         targetView.ShowHealEffect();
         yield return new WaitForSeconds(duration);
         targetView.HideHealEffect();
@@ -701,7 +701,6 @@ public class TurnManager : MonoBehaviour
     IEnumerator ShieldEffectRoutine(UnitView targetView, float duration)
     {
         if (targetView == null) yield break;
-
         targetView.ShowShieldEffect();
         yield return new WaitForSeconds(duration);
         targetView.HideShieldEffect();
@@ -710,7 +709,6 @@ public class TurnManager : MonoBehaviour
     IEnumerator GrenadeEffectRoutine(UnitView targetView, float duration)
     {
         if (targetView == null) yield break;
-
         targetView.ShowGrenadeEffect();
         yield return new WaitForSeconds(duration);
         targetView.HideGrenadeEffect();
