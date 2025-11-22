@@ -177,12 +177,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "1 sierpnia 1944 o godzinie W wybucha powstanie warszawskie. Powsta\u0144cy
-    postanawiaj\u0105 prze\u0142ama\u0107 bariery strachu i okupacji Niemieckiej,
-    by odzyska\u0107 suwerenno\u015B\u0107 Polski. Ludno\u015B\u0107 Warszawy przebija
-    si\u0119 i niszczy kolejne barykady, aby odzyska\u0107 strategiczne miejsca w
-    Warszawie. Jako pierwsze cele postawili sobie zdobycie Placu Wilsona, Placu Napoelona
-    i Plac trzech krzy\u017Cy.\n*Naci\u015Bnij spacj\u0119 aby pomin\u0105\u0107*"
+  m_text: "Dzi\u0119ki odwadze powsta\u0144c\xF3w i prze\u0142amywaniu barier strachu
+    Warszawiakom uda\u0142o si\u0119 zdoby\u0107 strategiczne miejsca w walce o Warszaw\u0119\n*naci\u015Bnij
+    spacj\u0119 by wr\xF3ci\u0107 do menu*"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -274,7 +271,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scrollSpeed: 100
-  nextSceneName: poziom1
+  nextSceneName: main_menu
   useStartPosition: 0
   showSkipMessage: 1
 --- !u!1 &1176191918
