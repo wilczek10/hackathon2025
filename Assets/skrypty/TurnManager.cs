@@ -244,16 +244,7 @@ public class TurnManager : MonoBehaviour
             return;
         }
 
-        // Bandage są teraz nieużywane, ale zostawiamy logikę na przyszłość
-        bool medicAlive = false;
-
-        if (!medicAlive && drawn.CardType == CardType.Bandage)
-        {
-            deck.Discard(drawn);
-            UpdateDeckVisual();
-            return;
-        }
-
+        // USUNIĘTO WARUNEK BLOKUJĄCY BANDAŻE - teraz bandaże są zawsze dostępne
         hand.AddCard(drawn);
         CreateCardUI(drawn);
 
@@ -529,7 +520,7 @@ public class TurnManager : MonoBehaviour
         bool tankAlive = aliveGermans.Any(g => g.unitData.UnitType == UnitType.Tank);
 
         int action;
-        if (tankAlive && Random.Range(0, 5) < 2) // 40% szans na atak czołgu
+        if (tankAlive && Random.Range(0, 10) < 3) // 40% szans na atak czołgu
         {
             action = 3;
         }

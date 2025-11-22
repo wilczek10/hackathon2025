@@ -3411,6 +3411,7 @@ GameObject:
   - component: {fileID: 1223068562}
   - component: {fileID: 1223068561}
   - component: {fileID: 1223068560}
+  - component: {fileID: 1223068564}
   m_Layer: 5
   m_Name: "czo\u0142g"
   m_TagString: Untagged
@@ -3455,7 +3456,7 @@ MonoBehaviour:
   grenadeClip: {fileID: 0}
   germanShootClip: {fileID: 7400000, guid: 0cbe4a11695f4d6468315d5c8ee7aa51, type: 2}
   germanGrenadeClip: {fileID: 7400000, guid: 54c0d956291e285458e0325a1fd0903d, type: 2}
-  tankAttackClip: {fileID: 0}
+  tankAttackClip: {fileID: 7400000, guid: 69fc83c72337a7c48ba8da52afd33860, type: 2}
 --- !u!114 &1223068561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3517,6 +3518,28 @@ RectTransform:
   m_AnchoredPosition: {x: 547, y: -317}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!95 &1223068564
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1223068559}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e8122306f73df37488bbffc99f301901, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1293176082
 GameObject:
   m_ObjectHideFlags: 0
