@@ -10,18 +10,21 @@ public class UnitView : MonoBehaviour, IPointerClickHandler
     public Slider shieldSlider;  // pasek tarczy
 
     [Header("Ikony celu / leczenia")]
-    public GameObject targetIcon;    // celownik (dla ataku)
-    public GameObject healIcon;      // plus (dla leczenia / buffów)
+    public GameObject targetIcon;  // celownik (dla ataku)
+    public GameObject healIcon;    // plus (dla trybu leczenia / buffów)
 
     [Header("Typ postaci")]
-    public bool isPolish;        // zaznacz dla Polaka
-    public bool isGerman;        // zaznacz dla Niemca
-    public bool isMedic;         // zaznacz tylko dla medyka
+    public bool isPolish;    // zaznacz dla Polaka
+    public bool isGerman;    // zaznacz dla Niemca
+    public bool isMedic;     // zaznacz tylko dla medyka
 
     [Header("Logic")]
     public TurnManager turnManager;
 
     [HideInInspector] public Unit unitData;
+
+    [Header("Obiekt efektu leczenia (dziecko Leczenie)")]
+    public GameObject healEffectObject;   // <- tu przeciągniesz dziecko "Leczenie"
 
     // Wywoływane z TurnManager.InitUnits
     public void InitUnit(Unit data)
@@ -29,6 +32,10 @@ public class UnitView : MonoBehaviour, IPointerClickHandler
         unitData = data;
         UpdateUI();
         SetTargetHighlight(false, false); // wyłącz ikony na start
+
+        // Upewnij się, że efekt leczenia jest wyłączony na starcie
+        if (healEffectObject != null)
+            healEffectObject.SetActive(false);
     }
 
     void Start()
@@ -51,7 +58,11 @@ public class UnitView : MonoBehaviour, IPointerClickHandler
         }
 
         UpdateUI();
-        SetTargetHighlight(false, false); // wyłącz ikony na start
+        SetTargetHighlight(false, false);
+
+        // Na wszelki wypadek wyłącz efekt na starcie
+        if (healEffectObject != null)
+            healEffectObject.SetActive(false);
     }
 
     public void UpdateUI()
@@ -73,7 +84,6 @@ public class UnitView : MonoBehaviour, IPointerClickHandler
 
             if (hasShield)
             {
-                // np. max 3 – wtedy tarcza 3/3 wygląda na pełną
                 shieldSlider.maxValue = 3;
                 shieldSlider.value = Mathf.Min(unitData.Shield, (int)shieldSlider.maxValue);
             }
@@ -102,6 +112,32 @@ public class UnitView : MonoBehaviour, IPointerClickHandler
         if (turnManager != null)
         {
             turnManager.OnUnitClicked(this);
+        }
+    }
+
+    /// <summary>
+    /// Włącza obiekt Leczenie.
+    /// </summary>
+    public void ShowHealEffect()
+    {
+        if (healEffectObject != null)
+        {
+            healEffectObject.SetActive(true);
+        }
+        else
+        {
+            Debug.LogWarning("ShowHealEffect: healEffectObject == null na obiekcie: " + gameObject.name);
+        }
+    }
+
+    /// <summary>
+    /// Wyłączenie obiektu Leczenie.
+    /// </summary>
+    public void HideHealEffect()
+    {
+        if (healEffectObject != null)
+        {
+            healEffectObject.SetActive(false);
         }
     }
 }

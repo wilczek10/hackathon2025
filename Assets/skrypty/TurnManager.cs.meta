@@ -1,2 +1,15 @@
 fileFormatVersion: 2
 guid: 0102fae4b13c3454095527aaa1c54476
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - handPanel: {instanceID: 0}
+  - cardUIPrefab: {instanceID: 0}
+  - infoText: {instanceID: 0}
+  - healEffectPrefab: {fileID: 8985441679090911636, guid: fe79a9d63bd047b4999e7d84db57eb19, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

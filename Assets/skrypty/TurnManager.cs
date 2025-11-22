@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
-
-// ====== ENUMY ======
 
 public enum Team
 {
@@ -33,8 +31,6 @@ public enum TurnState
     DrawPhase,
     CheckEnd
 }
-
-// ====== DANE LOGICZNE ======
 
 [System.Serializable]
 public class Unit
@@ -68,7 +64,6 @@ public class Deck
         drawPile.Clear();
         discardPile.Clear();
 
-        // 6 kart każdego rodzaju = 24 karty
         for (int i = 0; i < 6; i++)
         {
             drawPile.Add(new Card { CardType = CardType.Pistol, CardName = "Pistolet" });
@@ -128,8 +123,6 @@ public class Hand
     }
 }
 
-// ====== TURN MANAGER ======
-
 public class TurnManager : MonoBehaviour
 {
     [Header("Units")]
@@ -137,36 +130,32 @@ public class TurnManager : MonoBehaviour
     public List<UnitView> germanUnitViews;
 
     [Header("Cards UI")]
-    public Transform handPanel;       // panel w Canvasie (np. poziomy layout)
-    public GameObject cardUIPrefab;   // JEDEN prefab CardUI
+    public Transform handPanel;
+    public GameObject cardUIPrefab;
 
-    [Header("Game State UI (opcjonalne)")]
-    public Text infoText;             // do wyświetlania "Tura gracza", "Wygrana", itd.
+    [Header("Game State UI")]
+    public Text infoText;
 
     private Deck deck;
     private Hand hand;
 
     private TurnState state;
 
-    // aktualnie wybrana karta i jej UI
     private CardUI selectedCardUI;
-    private Card selectedCard;
+    [HideInInspector] public Card selectedCard;
     private bool selectingTarget;
 
     private bool gameEnded = false;
 
     void Start()
     {
-        // Inicjalizacja talii i ręki
         deck = new Deck();
         deck.InitializeDefaultDeck();
 
         hand = new Hand();
 
-        // Inicjalizacja jednostek
         InitUnits();
 
-        // Dobranie początkowych 4 kart
         for (int i = 0; i < hand.MaxHandSize; i++)
         {
             DrawCardToHand();
@@ -178,7 +167,7 @@ public class TurnManager : MonoBehaviour
 
     void InitUnits()
     {
-        // Polacy: 3 jednostki, np. 2 żołnierzy + 1 medyk (drugi na liście)
+        // Polacy – np. drugi to medyk
         for (int i = 0; i < polishUnitViews.Count; i++)
         {
             UnitType uType = (i == 1) ? UnitType.Medic : UnitType.Soldier;
@@ -215,7 +204,7 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    // ====== KARTY I UI ======
+    // ==== KARTY I UI ====
 
     public void DrawCardToHand()
     {
@@ -224,11 +213,9 @@ public class TurnManager : MonoBehaviour
         Card drawn = deck.DrawCard();
         if (drawn == null)
         {
-            // brak kart w talii - sprawdzimy w CheckEndConditions
             return;
         }
 
-        // zasada: gdy medyk martwy, nie dobieramy bandaży
         bool medicAlive = polishUnitViews.Any(
             v => v.unitData.UnitType == UnitType.Medic && v.unitData.IsAlive);
 
@@ -246,7 +233,7 @@ public class TurnManager : MonoBehaviour
     {
         GameObject go = Instantiate(cardUIPrefab, handPanel);
         var ui = go.GetComponent<CardUI>();
-        ui.Setup(card, this);  // JEDEN prefab, ale różne CardType → różny wygląd
+        ui.Setup(card, this);
     }
 
     public void OnCardClicked(CardUI cardUI)
@@ -254,14 +241,12 @@ public class TurnManager : MonoBehaviour
         if (state != TurnState.PlayerAction) return;
         if (gameEnded) return;
 
-        // najpierw wyłącz wszystkie poprzednie ikonki
         ClearAllTargetHighlights();
 
         selectedCardUI = cardUI;
         selectedCard = cardUI.cardData;
         selectingTarget = false;
 
-        // Granat (AoE) nie potrzebuje wyboru celu
         if (selectedCard.CardType == CardType.Grenade)
         {
             PlayCardGrenade();
@@ -269,14 +254,11 @@ public class TurnManager : MonoBehaviour
             return;
         }
 
-        // Inne karty wymagają wyboru celu
         selectingTarget = true;
 
-        // Włącz odpowiednie ikonki
         switch (selectedCard.CardType)
         {
             case CardType.Pistol:
-                // atak na Niemca
                 foreach (var gv in germanUnitViews)
                     gv.SetTargetHighlight(true, false);
                 UpdateInfoText("Wybierz NIEMCA dla karty: " + selectedCard.CardName);
@@ -284,7 +266,6 @@ public class TurnManager : MonoBehaviour
 
             case CardType.Bandage:
             case CardType.Helmet:
-                // leczenie / buff Polaka
                 foreach (var pv in polishUnitViews)
                     pv.SetTargetHighlight(false, true);
                 UpdateInfoText("Wybierz POLAKA dla karty: " + selectedCard.CardName);
@@ -292,7 +273,6 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    // Wywoływane przez UnitView.OnPointerClick
     public void OnUnitClicked(UnitView unitView)
     {
         Debug.Log("Kliknięto jednostkę: " + unitView.unitData.Name + " | Team: " + unitView.unitData.Team);
@@ -331,7 +311,8 @@ public class TurnManager : MonoBehaviour
 
         Debug.Log("Używam karty " + selectedCard.CardName + " na " + target.Name);
 
-        PlayCardOnTarget(selectedCard, target);
+        PlayCardOnTarget(selectedCard, target, unitView);
+
         unitView.UpdateUI();
         AfterCardPlayed();
     }
@@ -352,8 +333,10 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    void PlayCardOnTarget(Card card, Unit target)
+    void PlayCardOnTarget(Card card, Unit target, UnitView targetView)
     {
+        Debug.Log("PlayCardOnTarget: " + card.CardName + " na " + target.Name);
+
         switch (card.CardType)
         {
             case CardType.Pistol:
@@ -362,10 +345,16 @@ public class TurnManager : MonoBehaviour
 
             case CardType.Bandage:
                 Heal(target, 2);
+
+                // WŁĄCZAMY EFEKT LECZENIA NA 1 SEKUNDĘ
+                if (targetView != null)
+                {
+                    StartCoroutine(HealEffectRoutine(targetView, 1f));
+                }
                 break;
 
             case CardType.Helmet:
-                target.Shield += 2; // np. 2 jednostki tarczy
+                target.Shield += 2;
                 break;
         }
 
@@ -374,11 +363,10 @@ public class TurnManager : MonoBehaviour
 
     void PlayCardGrenade()
     {
-        // Granat - 1–2 dmg wszystkim Niemcom
         var aliveGermans = germanUnitViews.Where(v => v.unitData.IsAlive).ToList();
         foreach (var gv in aliveGermans)
         {
-            int dmg = Random.Range(1, 3); // 1 lub 2
+            int dmg = Random.Range(1, 3);
             DealDamage(gv.unitData, dmg);
         }
         RefreshAllUnitsUI();
@@ -387,7 +375,6 @@ public class TurnManager : MonoBehaviour
 
     void AfterCardPlayed()
     {
-        // Usuń kartę z ręki i z UI  
         if (selectedCard != null)
         {
             hand.RemoveCard(selectedCard);
@@ -403,10 +390,8 @@ public class TurnManager : MonoBehaviour
         selectedCardUI = null;
         selectingTarget = false;
 
-        // wyłącz wszystkie ikonki celów  
         ClearAllTargetHighlights();
 
-        // DOBIERZ od razu nową kartę, żeby znowu mieć 4 w ręce  
         if (!gameEnded)
         {
             while (hand.cardsInHand.Count < hand.MaxHandSize && deck.drawPile.Count > 0)
@@ -415,17 +400,14 @@ public class TurnManager : MonoBehaviour
             }
         }
 
-        // Zamiast natychmiast włączać Niemców, uruchamiamy coroutine z opóźnieniem  
         if (!gameEnded)
             StartCoroutine(EnemyTurnWithDelay());
     }
 
     IEnumerator EnemyTurnWithDelay()
     {
-        // krótkie opóźnienie, żeby gracz zobaczył efekt (leczenie, hełm itd.)
-        yield return new WaitForSeconds(0.6f);  // możesz zmienić na 0.8f / 1.0f
-
-        EndPlayerAction(); // to uruchomi EnemyAction()
+        yield return new WaitForSeconds(0.6f);
+        EndPlayerAction();
     }
 
     void RefreshAllUnitsUI()
@@ -434,7 +416,7 @@ public class TurnManager : MonoBehaviour
         foreach (var v in germanUnitViews) v.UpdateUI();
     }
 
-    // ====== DAMAGE / HEAL ======
+    // ==== DAMAGE / HEAL ====
 
     public void DealDamage(Unit target, int amount)
     {
@@ -471,7 +453,7 @@ public class TurnManager : MonoBehaviour
         RefreshAllUnitsUI();
     }
 
-    // ====== FLOW TUR ======
+    // ==== FLOW TUR ====
 
     public void EndPlayerAction()
     {
@@ -495,12 +477,11 @@ public class TurnManager : MonoBehaviour
             return;
         }
 
-        // 0 = strzał, 1 = granat, 2 = leczenie
         int action = Random.Range(0, 3);
 
         switch (action)
         {
-            case 0: // strzał w jednego Polaka
+            case 0:
                 {
                     UnitView targetPole = alivePoles[Random.Range(0, alivePoles.Count)];
                     DealDamage(targetPole.unitData, 3);
@@ -508,7 +489,7 @@ public class TurnManager : MonoBehaviour
                 }
                 break;
 
-            case 1: // granat w wszystkich Polaków
+            case 1:
                 {
                     foreach (var pv in alivePoles)
                     {
@@ -519,7 +500,7 @@ public class TurnManager : MonoBehaviour
                 }
                 break;
 
-            case 2: // leczenie jednego Niemca
+            case 2:
                 {
                     UnitView targetGerman = aliveGermans[Random.Range(0, aliveGermans.Count)];
                     Heal(targetGerman.unitData, 2);
@@ -572,7 +553,6 @@ public class TurnManager : MonoBehaviour
             return;
         }
 
-        // Gra trwa dalej → tura gracza
         state = TurnState.PlayerAction;
         UpdateInfoText("Tura gracza - wybierz kartę.");
     }
@@ -592,5 +572,20 @@ public class TurnManager : MonoBehaviour
 
         foreach (var gv in germanUnitViews)
             gv.SetTargetHighlight(false, false);
+    }
+
+    // === EFEKT LECZENIA ===
+    IEnumerator HealEffectRoutine(UnitView targetView, float duration)
+    {
+        if (targetView == null) yield break;
+
+        // włącz efekt
+        targetView.ShowHealEffect();
+
+        // czekaj duration sekund
+        yield return new WaitForSeconds(duration);
+
+        // wyłącz efekt
+        targetView.HideHealEffect();
     }
 }
