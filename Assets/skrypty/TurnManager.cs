@@ -274,16 +274,41 @@ public class TurnManager : MonoBehaviour
     // Wywoływane przez UnitView.OnPointerClick
     public void OnUnitClicked(UnitView unitView)
     {
-        if (!selectingTarget) return;
-        if (selectedCard == null) return;
-        if (state != TurnState.PlayerAction) return;
-        if (gameEnded) return;
+        Debug.Log("Kliknięto jednostkę: " + unitView.unitData.Name + " | Team: " + unitView.unitData.Team);
+
+        if (!selectingTarget)
+        {
+            Debug.Log("Klik zignorowany: nie jestem w trybie wybierania celu.");
+            return;
+        }
+
+        if (selectedCard == null)
+        {
+            Debug.Log("Brak wybranej karty (selectedCard == null).");
+            return;
+        }
+
+        if (state != TurnState.PlayerAction)
+        {
+            Debug.Log("Nie jest teraz tura gracza.");
+            return;
+        }
+
+        if (gameEnded)
+        {
+            Debug.Log("Gra już się skończyła.");
+            return;
+        }
 
         Unit target = unitView.unitData;
 
-        // Sprawdź, czy cel poprawny dla karty
         if (!IsValidTarget(selectedCard, target))
+        {
+            Debug.Log("Nieprawidłowy cel dla karty: " + selectedCard.CardName);
             return;
+        }
+
+        Debug.Log("Używam karty " + selectedCard.CardName + " na " + target.Name);
 
         PlayCardOnTarget(selectedCard, target);
         unitView.UpdateUI();
@@ -341,7 +366,7 @@ public class TurnManager : MonoBehaviour
 
     void AfterCardPlayed()
     {
-        // Usuń kartę z ręki i z UI
+        // Usuń kartę z ręki i z UI  
         if (selectedCard != null)
         {
             hand.RemoveCard(selectedCard);
@@ -357,7 +382,18 @@ public class TurnManager : MonoBehaviour
         selectedCardUI = null;
         selectingTarget = false;
 
-        // Koniec tury gracza
+        // *** NOWOŚĆ: od razu dobierz kartę, żeby znowu mieć 4 w ręce ***  
+        // (o ile gra się nie skończyła i w talii są karty)  
+        if (!gameEnded)
+        {
+            // jeśli w ręce jest mniej niż MaxHandSize, spróbuj dobrać  
+            while (hand.cardsInHand.Count < hand.MaxHandSize && deck.drawPile.Count > 0)
+            {
+                DrawCardToHand();
+            }
+        }
+
+        // Koniec tury gracza → tura Niemców  
         EndPlayerAction();
     }
 

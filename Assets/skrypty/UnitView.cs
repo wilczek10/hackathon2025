@@ -5,18 +5,21 @@ using UnityEngine.EventSystems;
 public class UnitView : MonoBehaviour, IPointerClickHandler
 {
     [Header("References")]
-    public Image spriteImage;   // jeœli u¿ywasz UI Image (w Canvasie)
-    public Slider hpSlider;
-    public Text shieldText;
+    public Image spriteImage;    // UI Image z grafik¹ jednostki
+    public Slider hpSlider;      // pasek HP
+    public Slider shieldSlider;  // pasek tarczy
 
-    [Header("Inspector Setup")]
-    public bool isPolish;       // zaznacz dla Polaków
-    public bool isMedic;        // zaznacz dla medyka
+    [Header("Typ postaci")]
+    public bool isPolish;        // zaznacz dla Polaka
+    public bool isGerman;        // zaznacz dla Niemca
+    public bool isMedic;         // zaznacz tylko dla medyka
+
+    [Header("Logic")]
+    public TurnManager turnManager;
 
     [HideInInspector] public Unit unitData;
-    [HideInInspector] public TurnManager turnManager;
 
-    // TurnManager wywo³uje InitUnit; jeœli nie, mo¿esz fallbackowaæ w Start
+    // Wywo³ywane z TurnManager.InitUnits (w Twoim TurnManager ju¿ to robisz)
     public void InitUnit(Unit data)
     {
         unitData = data;
@@ -25,48 +28,66 @@ public class UnitView : MonoBehaviour, IPointerClickHandler
 
     void Start()
     {
-        // Jeœli nie dosta³ danych z TurnManager, zainicjuj sam z flag
+        // Fallback, gdyby InitUnit nie zosta³ wywo³any
         if (unitData == null)
         {
+            Team team = Team.Poles;
+            if (isGerman) team = Team.Germans;
+            else if (isPolish) team = Team.Poles;
+
             unitData = new Unit
             {
                 Name = gameObject.name,
-                Team = isPolish ? Team.Poles : Team.Germans,
+                Team = team,
                 UnitType = isMedic ? UnitType.Medic : UnitType.Soldier,
-                MaxHp = isPolish ? 6 : 5,
-                CurrentHp = isPolish ? 6 : 5,
-                Shield = isPolish ? 0 : 2
+                MaxHp = isGerman ? 5 : 6,      // przyk³adowo: Niemiec 5 HP, Polak 6 HP
+                CurrentHp = isGerman ? 5 : 6,
+                Shield = isGerman ? 2 : 0      // Niemiec 2 tarczy, Polak 0
             };
-            UpdateUI();
         }
+
+        UpdateUI();
     }
 
     public void UpdateUI()
     {
         if (unitData == null) return;
 
+        // Pasek HP
         if (hpSlider != null)
         {
             hpSlider.maxValue = unitData.MaxHp;
             hpSlider.value = unitData.CurrentHp;
         }
 
-        if (shieldText != null)
+        // Pasek tarczy
+        if (shieldSlider != null)
         {
-            shieldText.text = unitData.Shield > 0 ? unitData.Shield.ToString() : "";
+            // ustaw maksymaln¹ wartoœæ tarczy wed³ug balansu (np. 5)
+            shieldSlider.maxValue = 5;
+            shieldSlider.value = unitData.Shield;
         }
 
+        // Efekt wizualny przy œmierci (wyszarzenie)
         if (spriteImage != null)
         {
-            spriteImage.color = unitData.IsAlive ? Color.white : new Color(0.3f, 0.3f, 0.3f, 1f);
+            spriteImage.color = unitData.IsAlive
+                ? Color.white
+                : new Color(0.3f, 0.3f, 0.3f, 1f);
         }
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        Debug.Log("OnPointerClick na obiekcie: " + gameObject.name);  // DEBUG – musi siê pojawiæ przy klikniêciu
+
         if (turnManager != null)
         {
             turnManager.OnUnitClicked(this);
+        }
+        else
+        {
+            Debug.LogWarning("turnManager == null na obiekcie: " + gameObject.name);
         }
     }
 }
