@@ -160,7 +160,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      czolgstrzelanie2_0: -6211277488375725585
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

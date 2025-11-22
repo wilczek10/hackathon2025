@@ -160,7 +160,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Warszawa-BG-3_0: -1308450096187368252
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

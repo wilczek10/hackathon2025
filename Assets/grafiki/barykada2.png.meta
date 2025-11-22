@@ -185,7 +185,9 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      barykada2_0: -2597959396270730354
+      barykada2_1: -3699503965294396159
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
