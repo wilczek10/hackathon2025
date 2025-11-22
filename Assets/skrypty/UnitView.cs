@@ -9,6 +9,10 @@ public class UnitView : MonoBehaviour, IPointerClickHandler
     public Slider hpSlider;      // pasek HP
     public Slider shieldSlider;  // pasek tarczy
 
+    [Header("Ikony celu / leczenia")]
+    public GameObject targetIcon;    // celownik (dla ataku)
+    public GameObject healIcon;      // plus (dla leczenia / buffów)
+
     [Header("Typ postaci")]
     public bool isPolish;        // zaznacz dla Polaka
     public bool isGerman;        // zaznacz dla Niemca
@@ -19,16 +23,15 @@ public class UnitView : MonoBehaviour, IPointerClickHandler
 
     [HideInInspector] public Unit unitData;
 
-    // Wywo³ywane z TurnManager.InitUnits (w Twoim TurnManager ju¿ to robisz)
     public void InitUnit(Unit data)
     {
         unitData = data;
         UpdateUI();
+        SetTargetHighlight(false, false); // wy³¹cz ikony na start
     }
 
     void Start()
     {
-        // Fallback, gdyby InitUnit nie zosta³ wywo³any
         if (unitData == null)
         {
             Team team = Team.Poles;
@@ -40,35 +43,32 @@ public class UnitView : MonoBehaviour, IPointerClickHandler
                 Name = gameObject.name,
                 Team = team,
                 UnitType = isMedic ? UnitType.Medic : UnitType.Soldier,
-                MaxHp = isGerman ? 5 : 6,      // przyk³adowo: Niemiec 5 HP, Polak 6 HP
+                MaxHp = isGerman ? 5 : 6,
                 CurrentHp = isGerman ? 5 : 6,
-                Shield = isGerman ? 2 : 0      // Niemiec 2 tarczy, Polak 0
+                Shield = isGerman ? 2 : 0
             };
         }
 
         UpdateUI();
+        SetTargetHighlight(false, false); // wy³¹cz ikony na start
     }
 
     public void UpdateUI()
     {
         if (unitData == null) return;
 
-        // Pasek HP
         if (hpSlider != null)
         {
             hpSlider.maxValue = unitData.MaxHp;
             hpSlider.value = unitData.CurrentHp;
         }
 
-        // Pasek tarczy
         if (shieldSlider != null)
         {
-            // ustaw maksymaln¹ wartoœæ tarczy wed³ug balansu (np. 5)
             shieldSlider.maxValue = 5;
             shieldSlider.value = unitData.Shield;
         }
 
-        // Efekt wizualny przy œmierci (wyszarzenie)
         if (spriteImage != null)
         {
             spriteImage.color = unitData.IsAlive
@@ -77,17 +77,20 @@ public class UnitView : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    public void SetTargetHighlight(bool attack, bool heal)
+    {
+        if (targetIcon != null)
+            targetIcon.SetActive(attack);
+
+        if (healIcon != null)
+            healIcon.SetActive(heal);
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("OnPointerClick na obiekcie: " + gameObject.name);  // DEBUG – musi siê pojawiæ przy klikniêciu
-
         if (turnManager != null)
         {
             turnManager.OnUnitClicked(this);
-        }
-        else
-        {
-            Debug.LogWarning("turnManager == null na obiekcie: " + gameObject.name);
         }
     }
 }

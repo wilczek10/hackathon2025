@@ -253,6 +253,9 @@ public class TurnManager : MonoBehaviour
         if (state != TurnState.PlayerAction) return;
         if (gameEnded) return;
 
+        // najpierw wyłącz wszystkie poprzednie ikonki
+        ClearAllTargetHighlights();
+
         selectedCardUI = cardUI;
         selectedCard = cardUI.cardData;
         selectingTarget = false;
@@ -267,8 +270,25 @@ public class TurnManager : MonoBehaviour
 
         // Inne karty wymagają wyboru celu
         selectingTarget = true;
-        UpdateInfoText("Wybierz cel dla karty: " + selectedCard.CardName);
-        // (opcjonalnie możesz tu podświetlić możliwe cele)
+
+        // Włącz odpowiednie ikonki
+        switch (selectedCard.CardType)
+        {
+            case CardType.Pistol:
+                // atak na Niemca
+                foreach (var gv in germanUnitViews)
+                    gv.SetTargetHighlight(true, false);
+                UpdateInfoText("Wybierz NIEMCA dla karty: " + selectedCard.CardName);
+                break;
+
+            case CardType.Bandage:
+            case CardType.Helmet:
+                // leczenie / buff Polaka
+                foreach (var pv in polishUnitViews)
+                    pv.SetTargetHighlight(false, true);
+                UpdateInfoText("Wybierz POLAKA dla karty: " + selectedCard.CardName);
+                break;
+        }
     }
 
     // Wywoływane przez UnitView.OnPointerClick
@@ -393,7 +413,14 @@ public class TurnManager : MonoBehaviour
             }
         }
 
-        // Koniec tury gracza → tura Niemców  
+        selectedCard = null;
+        selectedCardUI = null;
+        selectingTarget = false;
+
+        // wyłącz wszystkie ikonki celów  
+        ClearAllTargetHighlights();
+
+        // Koniec tury gracza  
         EndPlayerAction();
     }
 
@@ -552,5 +579,13 @@ public class TurnManager : MonoBehaviour
             infoText.text = msg;
         else
             Debug.Log(msg);
+    }
+    void ClearAllTargetHighlights()
+    {
+        foreach (var pv in polishUnitViews)
+            pv.SetTargetHighlight(false, false);
+
+        foreach (var gv in germanUnitViews)
+            gv.SetTargetHighlight(false, false);
     }
 }
