@@ -5555,6 +5555,7 @@ MonoBehaviour:
   - {fileID: 1167212619}
   - {fileID: 704177228}
   - {fileID: 327933234}
+  defeatSceneName: Porazka
   selectedCard:
     CardType: 0
     CardName: 

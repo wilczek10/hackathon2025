@@ -13,8 +13,21 @@ public class CardUI : MonoBehaviour, IPointerClickHandler
     public Sprite bandageSprite;
     public Sprite helmetSprite;
 
+    [Header("Highlight")]
+    public Color normalColor = Color.white;
+    public Color selectedColor = Color.yellow;
+
     [HideInInspector] public Card cardData;
     [HideInInspector] public TurnManager turnManager;
+
+    private void Awake()
+    {
+        if (cardImage != null)
+        {
+            // zapamiêtujemy pocz¹tkowy kolor karty jako kolor "normalny"
+            normalColor = cardImage.color;
+        }
+    }
 
     public void Setup(Card card, TurnManager tm)
     {
@@ -40,6 +53,15 @@ public class CardUI : MonoBehaviour, IPointerClickHandler
                     break;
             }
         }
+
+        // na starcie bez podœwietlenia
+        SetHighlighted(false);
+    }
+
+    public void SetHighlighted(bool highlighted)
+    {
+        if (cardImage == null) return;
+        cardImage.color = highlighted ? selectedColor : normalColor;
     }
 
     public void OnPointerClick(PointerEventData eventData)

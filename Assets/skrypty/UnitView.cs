@@ -66,8 +66,8 @@ public class UnitView : MonoBehaviour, IPointerClickHandler
             UnitType unitType = UnitType.Soldier;
             if (isTank) unitType = UnitType.Tank;
 
-            int maxHp = 6;
-            int currentHp = 6;
+            int maxHp = 8;
+            int currentHp = 8;
             int shield = 0;
 
             if (isGerman)

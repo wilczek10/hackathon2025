@@ -151,6 +151,9 @@ public class TurnManager : MonoBehaviour
     private Deck deck;
     private Hand hand;
 
+    [Header("Sceny")]
+    public string defeatSceneName = "Porazka"; // ustaw tu nazwę swojej sceny przegranej
+
     private TurnState state;
 
     private CardUI selectedCardUI;
@@ -158,6 +161,19 @@ public class TurnManager : MonoBehaviour
     private bool selectingTarget;
 
     private bool gameEnded = false;
+
+    void LoadDefeatScene()
+    {
+        if (!string.IsNullOrEmpty(defeatSceneName))
+        {
+            SceneManager.LoadScene(defeatSceneName);
+        }
+        else
+        {
+            // awaryjnie – jeśli nie ustawisz nazwy sceny, można np. wczytać kolejną scenę  
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+    }
 
     void Start()
     {
@@ -263,11 +279,19 @@ public class TurnManager : MonoBehaviour
         if (state != TurnState.PlayerAction) return;
         if (gameEnded) return;
 
-        ClearAllTargetHighlights();
+        // zdjęcie podświetlenia z poprzednio wybranej karty
+        if (selectedCardUI != null && selectedCardUI != cardUI)
+        {
+            selectedCardUI.SetHighlighted(false);
+        }
 
+        // ustawienie nowej wybranej karty i jej podświetlenie
         selectedCardUI = cardUI;
         selectedCard = cardUI.cardData;
+        selectedCardUI.SetHighlighted(true);
+
         selectingTarget = false;
+        ClearAllTargetHighlights();
 
         if (selectedCard.CardType == CardType.Grenade)
         {
@@ -426,6 +450,8 @@ public class TurnManager : MonoBehaviour
 
         if (selectedCardUI != null)
         {
+            // zdejmij highlight dla pewności, zanim zniszczysz
+            selectedCardUI.SetHighlighted(false);
             Destroy(selectedCardUI.gameObject);
         }
 
@@ -491,7 +517,26 @@ public class TurnManager : MonoBehaviour
 
     void OnUnitDied(Unit unit)
     {
+        // Spróbuj znaleźć widok jednostki wśród Polaków
+        UnitView view = polishUnitViews.FirstOrDefault(v => v.unitData == unit);
+        if (view != null)
+        {
+            polishUnitViews.Remove(view);
+            Destroy(view.gameObject);
+        }
+        else
+        {
+            // jeśli nie Polak, to szukamy wśród Niemców
+            view = germanUnitViews.FirstOrDefault(v => v.unitData == unit);
+            if (view != null)
+            {
+                germanUnitViews.Remove(view);
+                Destroy(view.gameObject);
+            }
+        }
+
         RefreshAllUnitsUI();
+        CheckEndConditions();
     }
 
     public void EndPlayerAction()
@@ -584,7 +629,7 @@ public class TurnManager : MonoBehaviour
 
                         foreach (var pv in alivePoles)
                         {
-                            int dmg = Random.Range(3, 5); // 1-4 obrażeń
+                            int dmg = Random.Range(3, 5); // 3-4 obrażeń
                             DealDamage(pv.unitData, dmg);
                         }
                         UpdateInfoText("CZOLG atakuje wszystkich Polaków!");
@@ -649,6 +694,9 @@ public class TurnManager : MonoBehaviour
         {
             gameEnded = true;
             UpdateInfoText("PRZEGRANA! Wszyscy Polacy zginęli.");
+
+            // przejście do sceny porażki po krótkim czasie (np. 1.5s na wyświetlenie tekstu)  
+            Invoke(nameof(LoadDefeatScene), 1.5f);
             return;
         }
 

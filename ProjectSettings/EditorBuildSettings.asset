@@ -26,6 +26,9 @@ EditorBuildSettings:
   - enabled: 1
     path: "Assets/poziomy/wst\u0119p 1.unity"
     guid: 9e867ca8a29ba1e448e924b23e9b0fb4
+  - enabled: 1
+    path: "Assets/poziomy/wst\u0119p 2.unity"
+    guid: ea48a71b5d8d9db42bff9a814da6f308
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
